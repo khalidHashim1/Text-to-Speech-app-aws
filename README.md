@@ -2,6 +2,8 @@
 
 This project demonstrates a full-stack web application that converts text into audio using AWS services. It was built to **learn how to integrate multiple AWS services into a working solution**.
 
+**Live Site:** [texttospeech.khalidhashim.com](https://texttospeech.khalidhashim.com)
+
 **Implementation Highlights:**
 
 1. **AWS Lambda:** Created a Lambda function to process text-to-speech conversion.  
