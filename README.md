@@ -1,20 +1,17 @@
-# Text-to-Speech-app-aws
+### Text-to-Speech Web App
 
-1- I created the lambda function and uloaded my code from chatGpt. 
+This project demonstrates a full-stack web application that converts text into audio using AWS services. It was built to **learn how to integrate multiple AWS services into a working solution**.
 
-2- Deployed my API gatway and enable CORS for users in other domains to reach my application. 
+**Implementation Highlights:**
 
-3- Created S3 bucket to store audio files there made sure is public access and Versioning is enabled. 
+1. **AWS Lambda:** Created a Lambda function to process text-to-speech conversion.  
+2. **API Gateway:** Deployed the API and enabled **CORS** so the frontend could securely access it from any domain.  
+3. **S3 Storage:** Stored generated audio files in an **S3 bucket** with public access and versioning enabled.  
+4. **Frontend Hosting:** Hosted the HTML frontend using **AWS Amplify** for secure and reliable delivery.  
 
-4- uploaded my html file to amplify to host the web application, why Amplify? because its secure and relible. 
+**Challenges & Learnings:**  
+- Resolved permission issues and 404 errors by correctly configuring **CORS** for both the API and S3 bucket.  
+- Fixed frontend formatting issues when receiving audio URLs from the API.  
+- Gained hands-on experience connecting **Lambda, API Gateway, S3, and Amplify** into a functional solution.  
 
-
-
-note: i faced alot of issues in premissions i was getting 404 errors until i enable CORS for both my API and S3 bucket, also i faced in issue with frontend code after its getting the audio url from api the formatting was not matching, 
-      it created 404 error in website console. 
-
-this web application its for learning how to connect AWS services all togather to provide a technical solution or solve a problem. 
-
-
-
-khalid. 
+This project helped me understand **end-to-end AWS service integration**, providing a real-world technical solution while improving my cloud skills.
