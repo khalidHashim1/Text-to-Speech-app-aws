@@ -374,7 +374,7 @@
 
                 if (!response.ok) {
                     console.error("Non-OK response from API:", response.status, response.statusText);
-                    errorMessage.textContent = "حدث خطأ من الخادم أثناء إنشاء الصوت. حاول مرة أخرى.";
+                    errorMessage.textContent = "حدث خطأ من الخادم أثناء إنشاء الصوت. (رمز الحالة: " + response.status + ")";
                     return;
                 }
 
@@ -411,7 +411,7 @@
                 statusMessage.textContent = "Speech generated successfully.";
             } catch (error) {
                 console.error("Fetch error:", error);
-                errorMessage.textContent = "An error occurred while generating speech. Please try again.";
+                errorMessage.textContent = `تعذر الوصول إلى خدمة تحويل النص إلى كلام. تأكد من اتصال الإنترنت وإعدادات CORS ثم حاول مرة أخرى. (${error})`;
             } finally {
                 convertButton.disabled = textInput.value.trim().length === 0;
                 convertButton.innerHTML = originalLabel;
