@@ -53,6 +53,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+          # Safety check: Lambda function name must be set
+      - name: Validate Lambda function name
+        run: |
+          if [ -z "$LAMBDA_FUNCTION_NAME" ]; then
+            echo "❌ ERROR: LAMBDA_FUNCTION_NAME secret is empty!"
+            exit 1
+          else
+            echo "✅ Lambda function name loaded: $LAMBDA_FUNCTION_NAME"
+          fi
+
       # Upload frontend to S3
       - name: Sync frontend to S3
         run: |
