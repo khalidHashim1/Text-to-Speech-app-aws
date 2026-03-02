@@ -68,17 +68,12 @@ jobs:
       # Deploy Lambda
       ##############################
       - name: Deploy Lambda function
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: eu-north-1
-          LAMBDA_FUNCTION_NAME: ${{ secrets.LAMBDA_FUNCTION_NAME }}
         run: |
           cd backend
-          pip install -r requirements.txt
-          zip ../lambda.zip lambda_function.py
+          pip install -r requirements.txt -t .
+          zip -r ../lambda.zip .
           cd ..
-
+      
           aws lambda update-function-code \
             --function-name "$LAMBDA_FUNCTION_NAME" \
             --zip-file fileb://lambda.zip
