@@ -1,20 +1,29 @@
 import boto3
 import json
+<<<<<<< HEAD
 import os
 import uuid
 import base64
 from botocore.exceptions import ClientError
+=======
+import uuid
+>>>>>>> 664b06c592ef67f6f9a7b313c899ee312614c72c
 
 polly_client = boto3.client('polly')
 s3_client = boto3.client('s3')
 
+<<<<<<< HEAD
 BUCKET_NAME = os.environ.get('BUCKET_NAME', 'khliad-audio-converter1010')
+=======
+BUCKET_NAME = 'khliad-audio-converter1010'
+>>>>>>> 664b06c592ef67f6f9a7b313c899ee312614c72c
 MAX_TEXT_LENGTH = 3000
 CORS_HEADERS = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Methods": "OPTIONS,POST"
 }
+<<<<<<< HEAD
 PRESIGNED_URL_EXPIRES_IN_SECONDS = 3600
 
 ALLOWED_VOICES = {
@@ -27,6 +36,8 @@ ALLOWED_VOICES = {
 }
 
 ALLOWED_ENGINES = {"standard", "neural"}
+=======
+>>>>>>> 664b06c592ef67f6f9a7b313c899ee312614c72c
 
 
 def _make_response(status_code, body_dict):
@@ -40,6 +51,7 @@ def _make_response(status_code, body_dict):
 def lambda_handler(event, context):
     print("Received Event:", json.dumps(event))  # Debugging Log
 
+<<<<<<< HEAD
     # Handle CORS preflight
     method = event.get("httpMethod")
     if not method:
@@ -65,6 +77,21 @@ def lambda_handler(event, context):
     engine = (event_body.get("engine") or "standard").strip().lower()
     output_format = (event_body.get("outputFormat") or "mp3").strip().lower()
 
+=======
+    # Parse event body if using API Gateway
+    try:
+        if 'body' in event:
+            raw_body = event.get('body') or "{}"
+            event_body = json.loads(raw_body)
+        else:
+            event_body = event or {}
+    except (TypeError, json.JSONDecodeError) as e:
+        print("Error parsing event body:", str(e))
+        return _make_response(400, {'error': 'Invalid JSON body'})
+
+    text = event_body.get('text', 'Hello, welcome to AWS Polly!')
+
+>>>>>>> 664b06c592ef67f6f9a7b313c899ee312614c72c
     if not text or not str(text).strip():
         return _make_response(400, {'error': 'Missing "text" parameter'})
 
@@ -74,6 +101,7 @@ def lambda_handler(event, context):
             400,
             {'error': f'Text is too long. Maximum length is {MAX_TEXT_LENGTH} characters.'}
         )
+<<<<<<< HEAD
 
     if output_format != "mp3":
         return _make_response(400, {"error": 'Only "mp3" outputFormat is supported currently.'})
@@ -83,6 +111,8 @@ def lambda_handler(event, context):
 
     if engine not in ALLOWED_ENGINES:
         return _make_response(400, {"error": f'Unsupported engine "{engine}".'})
+=======
+>>>>>>> 664b06c592ef67f6f9a7b313c899ee312614c72c
 
     # Generate speech with Polly
     try:
@@ -127,6 +157,7 @@ def lambda_handler(event, context):
 
     print("Generated Audio URL:", audio_url)  # Debugging Log
 
+<<<<<<< HEAD
     return _make_response(
         200,
         {
@@ -135,3 +166,6 @@ def lambda_handler(event, context):
             'expires_in': PRESIGNED_URL_EXPIRES_IN_SECONDS
         }
     )
+=======
+    return _make_response(200, {'audio_url': audio_url})
+>>>>>>> 664b06c592ef67f6f9a7b313c899ee312614c72c
