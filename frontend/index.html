@@ -18,30 +18,33 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle at top, #4e94f4 0, #0b1630 55%, #050814 100%);
-            color: #0f172a;
+            padding: 32px 16px;
+            background: radial-gradient(circle at top left, #e0f2fe 0, #f9fafb 40%, #e5e7eb 100%);
+            color: #020617;
         }
 
-        .container {
-            background: rgba(15, 23, 42, 0.9);
-            color: #e5e7eb;
-            padding: 32px 28px;
-            border-radius: 18px;
+        .shell {
             width: 100%;
-            max-width: 640px;
-            box-shadow:
-                0 24px 60px rgba(15, 23, 42, 0.75),
-                0 0 0 1px rgba(148, 163, 184, 0.15);
-            backdrop-filter: blur(18px);
-            transform: translateY(0);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            max-width: 960px;
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2.3fr);
+            gap: 28px;
+            align-items: stretch;
         }
 
-        .container:hover {
-            transform: translateY(-2px);
+        .panel {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px 24px 22px;
             box-shadow:
-                0 32px 80px rgba(15, 23, 42, 0.9),
-                0 0 0 1px rgba(148, 163, 184, 0.2);
+                0 18px 40px rgba(15, 23, 42, 0.12),
+                0 0 0 1px rgba(148, 163, 184, 0.25);
+        }
+
+        .panel-secondary {
+            background: linear-gradient(145deg, #0f172a, #020617);
+            color: #e5e7eb;
+            padding: 22px 22px 20px;
         }
 
         .title-row {
@@ -49,14 +52,14 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         h2 {
-            font-size: 1.75rem;
+            font-size: 1.65rem;
             font-weight: 650;
-            letter-spacing: 0.02em;
-            color: #f9fafb;
+            letter-spacing: 0.01em;
+            color: #020617;
         }
 
         .badge {
@@ -64,52 +67,55 @@
             font-size: 0.7rem;
             border-radius: 999px;
             text-transform: uppercase;
-            letter-spacing: 0.12em;
-            background: rgba(56, 189, 248, 0.15);
-            color: #e0f2fe;
-            border: 1px solid rgba(56, 189, 248, 0.45);
+            letter-spacing: 0.14em;
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
             white-space: nowrap;
         }
 
         .subtitle {
             font-size: 0.9rem;
-            color: #9ca3af;
+            color: #64748b;
             margin-bottom: 18px;
         }
 
         label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #9ca3af;
+            letter-spacing: 0.12em;
+            color: #94a3b8;
             margin-bottom: 6px;
         }
 
         textarea {
             width: 100%;
             padding: 12px 13px;
-            border-radius: 10px;
-            border: 1px solid rgba(148, 163, 184, 0.5);
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
             resize: vertical;
-            min-height: 120px;
+            min-height: 130px;
             max-height: 260px;
-            font-size: 0.98rem;
-            line-height: 1.5;
+            font-size: 0.97rem;
+            line-height: 1.55;
             outline: none;
-            background: rgba(15, 23, 42, 0.8);
-            color: #e5e7eb;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            background: #f8fafc;
+            color: #0f172a;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.08s ease;
         }
 
         textarea::placeholder {
-            color: #6b7280;
+            color: #9ca3af;
         }
 
         textarea:focus {
-            border-color: #4e94f4;
-            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.6), 0 0 0 8px rgba(37, 99, 235, 0.28);
-            background: rgba(15, 23, 42, 0.95);
+            border-color: #2563eb;
+            background: #ffffff;
+            box-shadow:
+                0 0 0 1px rgba(37, 99, 235, 0.55),
+                0 14px 30px rgba(59, 130, 246, 0.25);
+            transform: translateY(-1px);
         }
 
         .textarea-footer {
@@ -118,9 +124,9 @@
             justify-content: space-between;
             gap: 10px;
             margin-top: 8px;
-            margin-bottom: 18px;
-            font-size: 0.8rem;
-            color: #6b7280;
+            margin-bottom: 16px;
+            font-size: 0.78rem;
+            color: #94a3b8;
         }
 
         .char-count {
@@ -135,10 +141,10 @@
 
         button {
             flex: 1;
-            padding: 11px 14px;
-            background: linear-gradient(135deg, #4e94f4, #2563eb);
+            padding: 11px 16px;
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
             color: white;
-            font-size: 0.98rem;
+            font-size: 0.95rem;
             font-weight: 600;
             border: none;
             border-radius: 999px;
@@ -148,13 +154,13 @@
             justify-content: center;
             gap: 8px;
             transition:
-                background 0.2s ease,
-                transform 0.1s ease,
-                box-shadow 0.2s ease,
-                opacity 0.15s ease;
+                background 0.18s ease,
+                transform 0.08s ease,
+                box-shadow 0.18s ease,
+                opacity 0.12s ease;
             box-shadow:
-                0 14px 30px rgba(37, 99, 235, 0.45),
-                0 0 0 1px rgba(59, 130, 246, 0.48);
+                0 14px 34px rgba(37, 99, 235, 0.4),
+                0 0 0 1px rgba(59, 130, 246, 0.55);
         }
 
         button span.icon {
@@ -163,51 +169,100 @@
 
         button:hover:not(:disabled) {
             transform: translateY(-1px);
-            background: linear-gradient(135deg, #5ea0ff, #1d4ed8);
+            background: linear-gradient(135deg, #1d4ed8, #4338ca);
             box-shadow:
-                0 20px 40px rgba(37, 99, 235, 0.6),
-                0 0 0 1px rgba(59, 130, 246, 0.6);
+                0 20px 40px rgba(37, 99, 235, 0.55),
+                0 0 0 1px rgba(59, 130, 246, 0.7);
         }
 
         button:active:not(:disabled) {
             transform: translateY(0);
             box-shadow:
-                0 10px 25px rgba(37, 99, 235, 0.5),
-                0 0 0 1px rgba(59, 130, 246, 0.6);
+                0 10px 24px rgba(37, 99, 235, 0.45),
+                0 0 0 1px rgba(59, 130, 246, 0.7);
         }
 
         button:disabled {
             cursor: default;
-            opacity: 0.6;
+            opacity: 0.55;
             box-shadow: none;
-            background: linear-gradient(135deg, #4b5563, #374151);
+            background: linear-gradient(135deg, #cbd5f5, #a5b4fc);
         }
 
         audio {
             width: 100%;
-            margin-top: 18px;
+            margin-top: 14px;
             border-radius: 999px;
-            accent-color: #4e94f4;
-            filter: drop-shadow(0 12px 26px rgba(15, 23, 42, 0.8));
+            accent-color: #2563eb;
+            filter: drop-shadow(0 12px 26px rgba(15, 23, 42, 0.24));
         }
 
         .error-message {
-            color: #fca5a5;
-            font-size: 0.85rem;
-            margin-top: 10px;
+            color: #b91c1c;
+            font-size: 0.8rem;
+            margin-top: 8px;
         }
 
         .status {
-            font-size: 0.8rem;
-            color: #9ca3af;
+            font-size: 0.78rem;
+            color: #64748b;
             min-height: 1em;
         }
 
+        .panel-secondary h3 {
+            font-size: 0.9rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #60a5fa;
+            margin-bottom: 10px;
+        }
+
+        .panel-secondary p {
+            font-size: 0.85rem;
+            color: #cbd5f5;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .panel-secondary p:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+            margin-bottom: 6px;
+        }
+
+        .pill {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(148, 163, 184, 0.45);
+            color: #e5e7eb;
+        }
+
+        @media screen and (max-width: 880px) {
+            .shell {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .panel-secondary {
+                order: -1;
+            }
+        }
+
         @media screen and (max-width: 640px) {
-            .container {
-                margin: 18px;
-                padding: 22px 18px;
-                border-radius: 16px;
+            body {
+                padding: 20px 14px;
+            }
+
+            .panel {
+                padding: 20px 18px 18px;
+                border-radius: 18px;
             }
 
             h2 {
@@ -215,41 +270,56 @@
             }
 
             .subtitle {
-                font-size: 0.85rem;
+                font-size: 0.86rem;
             }
 
             button {
-                font-size: 0.92rem;
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="title-row">
-            <h2>Text to Speech</h2>
-            <div class="badge">AWS powered</div>
+    <div class="shell">
+        <div class="panel">
+            <div class="title-row">
+                <h2>Text to Speech</h2>
+                <div class="badge">AWS powered</div>
+            </div>
+            <p class="subtitle">اكتب أو الصق النص، ثم حوّله لصوت واضح وطبيعي خلال ثوانٍ.</p>
+
+            <label for="textInput">النص</label>
+            <textarea id="textInput" rows="5"
+                placeholder="مثال: اليوم نقوم باختبار تطبيق تحويل النص إلى كلام باستخدام خدمات AWS..."></textarea>
+
+            <div class="textarea-footer">
+                <span class="status" id="statusMessage"></span>
+                <span class="char-count" id="charCount">0 characters</span>
+            </div>
+
+            <div class="actions">
+                <button id="convertButton" onclick="convertTextToSpeech()">
+                    <span class="icon">🔊</span>
+                    <span>تحويل النص إلى صوت</span>
+                </button>
+            </div>
+
+            <audio id="audioPlayer" controls></audio>
+            <div id="errorMessage" class="error-message"></div>
         </div>
-        <p class="subtitle">Paste or type any text below and instantly generate clear, natural speech.</p>
 
-        <label for="textInput">Your text</label>
-        <textarea id="textInput" rows="5" placeholder="For example: Today we are testing our AWS text‑to‑speech app..."></textarea>
-
-        <div class="textarea-footer">
-            <span class="status" id="statusMessage"></span>
-            <span class="char-count" id="charCount">0 characters</span>
-        </div>
-
-        <div class="actions">
-            <button id="convertButton" onclick="convertTextToSpeech()">
-                <span class="icon">🔊</span>
-                <span>Convert to speech</span>
-            </button>
-        </div>
-
-        <audio id="audioPlayer" controls></audio>
-        <div id="errorMessage" class="error-message"></div>
+        <aside class="panel panel-secondary">
+            <h3>ملاحظات سريعة</h3>
+            <p>• حاول استخدام جُمَل قصيرة وواضحة لتحصل على أفضل جودة في الصوت الناتج.</p>
+            <p>• يمكنك إعادة استخدام رابط الصوت في أي مكان (عرض، موقع، أو مشاركة).</p>
+            <div class="pill-row">
+                <span class="pill">نبرة حديث طبيعية</span>
+                <span class="pill">مناسب للعروض</span>
+                <span class="pill">مدعوم بـ AWS</span>
+            </div>
+            <p>هذا النموذج واجهة بسيطة لطبقة الـ API التي قمت بإنشائها، ويمكنك تطويرها لاحقًا لدعم لغات وأصوات مختلفة.</p>
+        </aside>
     </div>
 
     <script>
