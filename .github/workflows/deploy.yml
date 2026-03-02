@@ -18,7 +18,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -34,7 +35,7 @@ jobs:
       - name: Run backend tests
         run: |
           cd backend
-          pytest || echo "No tests yet"
+          pytest || echo "⚠️ No tests yet"
 
   #################################
   # 2️⃣ Deploy (main only)
@@ -44,7 +45,8 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       ##############################
       # Configure AWS credentials
@@ -57,21 +59,19 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       ##############################
-      # Safety check: Lambda function name
+      # Validate Lambda secret
       ##############################
       - name: Validate Lambda function name
-        env:
-          LAMBDA_FUNCTION_NAME: ${{ secrets.LAMBDA_FUNCTION_NAME }}
         run: |
-          if [ -z "$LAMBDA_FUNCTION_NAME" ]; then
+          if [ -z "${{ secrets.LAMBDA_FUNCTION_NAME }}" ]; then
             echo "❌ ERROR: LAMBDA_FUNCTION_NAME secret is empty!"
             exit 1
           else
-            echo "✅ Lambda function name loaded: $LAMBDA_FUNCTION_NAME"
+            echo "✅ Lambda function name loaded"
           fi
 
       ##############################
-      # Upload frontend to S3
+      # Sync frontend to S3
       ##############################
       - name: Sync frontend to S3
         run: |
@@ -85,26 +85,31 @@ jobs:
           LAMBDA_FUNCTION_NAME: ${{ secrets.LAMBDA_FUNCTION_NAME }}
         run: |
           cd backend
-          # Install dependencies into backend folder for Lambda
+
+          # Install dependencies into the folder for Lambda
           pip install -r requirements.txt -t .
-          # Zip all files including dependencies
+
+          # Create zip package
           zip -r ../lambda.zip .
+
           cd ..
 
-          # Optional: list zip contents for debug
-          echo "Contents of lambda.zip:"
-          unzip -l lambda.zip
+          # Debug: only count files instead of printing all
+          echo "Lambda package created with total files:"
+          unzip -l lambda.zip | wc -l
 
-          # Deploy Lambda
+          # Deploy to Lambda
           aws lambda update-function-code \
             --function-name "$LAMBDA_FUNCTION_NAME" \
             --zip-file fileb://lambda.zip
 
       ##############################
-      # Invalidate CloudFront cache
+      # Invalidate CloudFront
       ##############################
-      - name: Invalidate CloudFront
+      - name: Invalidate CloudFront cache
+        env:
+          DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --distribution-id "$DISTRIBUTION_ID" \
             --paths "/*"
