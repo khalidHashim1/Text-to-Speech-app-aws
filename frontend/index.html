@@ -329,11 +329,12 @@
         const convertButton = document.getElementById("convertButton");
         const errorMessage = document.getElementById("errorMessage");
         const audioPlayer = document.getElementById("audioPlayer");
+        const MAX_LENGTH = 3000;
 
         function updateCharCount() {
             const length = textInput.value.length;
-            charCount.textContent = length === 1 ? "1 character" : `${length} characters`;
-            convertButton.disabled = length === 0;
+            charCount.textContent = `${length} حرف`;
+            convertButton.disabled = length === 0 || length > MAX_LENGTH;
         }
 
         textInput.addEventListener("input", () => {
@@ -350,7 +351,12 @@
             statusMessage.textContent = "";
 
             if (!text) {
-                errorMessage.textContent = "Please enter some text first.";
+                errorMessage.textContent = "الرجاء إدخال نص أولاً.";
+                return;
+            }
+
+            if (text.length > MAX_LENGTH) {
+                errorMessage.textContent = `النص طويل جدًا. الحد الأقصى هو ${MAX_LENGTH} حرف.`;
                 return;
             }
 
@@ -366,10 +372,30 @@
                     body: JSON.stringify({ text })
                 });
 
-                const data = await response.json();
+                if (!response.ok) {
+                    console.error("Non-OK response from API:", response.status, response.statusText);
+                    errorMessage.textContent = "حدث خطأ من الخادم أثناء إنشاء الصوت. حاول مرة أخرى.";
+                    return;
+                }
+
+                let data;
+                try {
+                    data = await response.json();
+                } catch (parseError) {
+                    console.error("Error parsing JSON response:", parseError);
+                    errorMessage.textContent = "تعذر قراءة استجابة الخادم. حاول مرة أخرى لاحقًا.";
+                    return;
+                }
                 console.log("API Response:", data);
 
-                const parsedBody = typeof data.body === "string" ? JSON.parse(data.body) : data.body;
+                let parsedBody;
+                try {
+                    parsedBody = typeof data.body === "string" ? JSON.parse(data.body) : data.body;
+                } catch (bodyParseError) {
+                    console.error("Error parsing body field:", bodyParseError);
+                    errorMessage.textContent = "استجابة غير متوقعة من الخادم. حاول مرة أخرى لاحقًا.";
+                    return;
+                }
                 console.log("Parsed Audio URL:", parsedBody?.audio_url);
 
                 if (!parsedBody || !parsedBody.audio_url) {
