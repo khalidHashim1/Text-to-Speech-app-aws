@@ -2,154 +2,251 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text-to-Speech App1</title>
-    <style>
-        /* General Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern TTS Showcase</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & Body */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f7fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
 
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-        }
+    .tts-container {
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px 30px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
 
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-        }
+    .tts-container:hover {
+      transform: translateY(-5px);
+    }
 
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            resize: vertical;
-            margin-bottom: 20px;
-            font-size: 1rem;
-            outline: none;
-        }
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 30px;
+    }
 
-        textarea:focus {
-            border-color: #4e94f4;
-        }
+    textarea {
+      width: 100%;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 1.1rem;
+      min-height: 130px;
+      outline: none;
+      resize: vertical;
+      transition: border 0.3s ease, font-family 0.2s ease;
+    }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #4e94f4;
-            color: white;
-            font-size: 1.1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+    textarea:focus {
+      border-color: #2575fc;
+    }
 
-        button:hover {
-            background-color: #3a74d2;
-        }
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 15px 0;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
 
-        audio {
-            width: 100%;
-            margin-top: 20px;
-            border-radius: 5px;
-        }
+    select {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.3s ease;
+    }
 
-        .error-message {
-            color: red;
-            font-size: 1rem;
-            text-align: center;
-            margin-top: 20px;
-        }
+    select:focus {
+      border-color: #2575fc;
+    }
 
-        /* Mobile-Friendly Adjustments */
-        @media screen and (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
+    button {
+      width: 100%;
+      padding: 15px;
+      background: #2575fc;
+      color: #fff;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-            h2 {
-                font-size: 1.5rem;
-            }
+    button:hover:not(:disabled) {
+      background: #1a5ed4;
+      transform: translateY(-2px);
+    }
 
-            textarea {
-                font-size: 0.9rem;
-            }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
 
-            button {
-                font-size: 1rem;
-            }
-        }
-    </style>
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #fff;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      animation: spin 1s linear infinite;
+      margin-left: 10px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 25px;
+      border-radius: 10px;
+    }
+
+    .error-message {
+      color: red;
+      font-weight: 500;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      textarea {
+        min-height: 100px;
+      }
+
+      button {
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <h2>Enter Text for Speech</h2>
-        <textarea id="textInput" rows="4" placeholder="Type here..."></textarea>
-        <button onclick="convertTextToSpeech()">Convert</button>
-        <audio id="audioPlayer" controls></audio>
-        <div id="errorMessage" class="error-message"></div>
+  <div class="tts-container">
+    <h1>Text-to-Speech Showcase</h1>
+
+    <textarea id="textInput" placeholder="اكتب هنا أو type your text..."></textarea>
+
+    <div class="options">
+      <select id="voiceSelect">
+        <option value="default">Default Voice</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+
+      <select id="langSelect">
+        <option value="en-US">English</option>
+        <option value="ar-SA">Arabic</option>
+      </select>
     </div>
 
-    <script>
-        async function convertTextToSpeech() {
-            const text = document.getElementById("textInput").value;
-            const errorMessage = document.getElementById("errorMessage");
+    <button id="convertBtn">Convert <span id="loader" class="loader" style="display:none;"></span></button>
 
-            errorMessage.textContent = ''; // Clear previous error
+    <audio id="audioPlayer" controls></audio>
+    <div id="errorMessage" class="error-message"></div>
+  </div>
 
-            try {
-                const response = await fetch("https://h3aqu11qg8.execute-api.us-east-1.amazonaws.com/prod/tts", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ text: text })
-                });
+  <script>
+    const textInput = document.getElementById("textInput");
+    const convertBtn = document.getElementById("convertBtn");
+    const loader = document.getElementById("loader");
+    const errorMessage = document.getElementById("errorMessage");
+    const audioPlayer = document.getElementById("audioPlayer");
+    const voiceSelect = document.getElementById("voiceSelect");
+    const langSelect = document.getElementById("langSelect");
 
-                const data = await response.json();
+    // Switch font dynamically based on Arabic or English input
+    textInput.addEventListener("input", () => {
+      const arabicRegex = /[\u0600-\u06FF]/;
+      if (arabicRegex.test(textInput.value)) {
+        textInput.style.fontFamily = "'Cairo', sans-serif";
+        langSelect.value = "ar-SA";
+      } else {
+        textInput.style.fontFamily = "'Roboto', sans-serif";
+        langSelect.value = "en-US";
+      }
+    });
 
-                console.log("API Response:", data);  // Debugging log 🚀
+    convertBtn.addEventListener("click", async () => {
+      const text = textInput.value.trim();
+      const voice = voiceSelect.value;
+      const language = langSelect.value;
 
-                // Parse the body of the response to extract audio_url
-                const parsedBody = JSON.parse(data.body);  // Parse body to get actual audio_url
+      errorMessage.textContent = "";
+      audioPlayer.src = "";
 
-                console.log("Parsed Audio URL:", parsedBody.audio_url);  // Debugging log
+      if (!text) {
+        errorMessage.textContent = "Please enter some text.";
+        return;
+      }
 
-                if (!parsedBody.audio_url) {
-                    console.error("Error: audio_url is missing from the response", parsedBody);
-                    errorMessage.textContent = "Error: Audio URL not received from server.";
-                    return;
-                }
+      convertBtn.disabled = true;
+      loader.style.display = "inline-block";
 
-                // Set audio URL to player
-                document.getElementById("audioPlayer").src = parsedBody.audio_url;
-            } catch (error) {
-                console.error("Fetch error:", error);
-                errorMessage.textContent = "An error occurred while generating speech.";
-            }
+      try {
+        const response = await fetch("https://h3aqu11qg8.execute-api.us-east-1.amazonaws.com/prod/tts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text, voice, language })
+        });
+
+        const data = await response.json();
+        let parsedBody;
+        try {
+          parsedBody = JSON.parse(data.body);
+        } catch {
+          throw new Error("Invalid server response.");
         }
-    </script>
+
+        if (!parsedBody.audio_url) throw new Error("Audio URL missing in response.");
+
+        audioPlayer.src = parsedBody.audio_url;
+        audioPlayer.play().catch(() => console.log("Autoplay prevented."));
+      } catch (error) {
+        console.error(error);
+        errorMessage.textContent = error.message || "Error generating speech.";
+      } finally {
+        convertBtn.disabled = false;
+        loader.style.display = "none";
+      }
+    });
+  </script>
 </body>
 
 </html>
