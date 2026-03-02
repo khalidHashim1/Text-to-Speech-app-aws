@@ -71,6 +71,15 @@ jobs:
       ##############################
       # Sync frontend to S3
       ##############################
+      - name: Validate S3 bucket name
+        run: |
+          if [ -z "${{ secrets.AWS_S3_BUCKET }}" ]; then
+            echo "❌ ERROR: AWS_S3_BUCKET secret is empty!"
+            exit 1
+          else
+            echo "✅ S3 bucket name loaded"
+          fi
+
       - name: Sync frontend to S3
         run: |
           aws s3 sync frontend s3://${{ secrets.AWS_S3_BUCKET }} --delete
