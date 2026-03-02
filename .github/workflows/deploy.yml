@@ -4,14 +4,12 @@ on:
   push:
     branches:
       - main
-      - dev
     paths:
       - 'frontend/**'
       - 'backend/**'
       - '.github/**'
 
 jobs:
-
   #################################
   # 1️⃣ Run backend tests
   #################################
@@ -78,7 +76,7 @@ jobs:
           aws s3 sync frontend s3://${{ secrets.AWS_S3_BUCKET }} --delete
 
       ##############################
-      # Package and deploy Lambda
+      # Package and deploy Lambda (optimized)
       ##############################
       - name: Package and deploy Lambda
         env:
@@ -86,17 +84,24 @@ jobs:
         run: |
           cd backend
 
-          # Install dependencies into the folder for Lambda
-          pip install -r requirements.txt -t .
+          # Create a clean folder for Lambda deployment
+          mkdir -p lambda_package
 
-          # Create zip package
+          # Install only dependencies into this folder
+          pip install --target lambda_package -r requirements.txt
+
+          # Copy only your Lambda code
+          cp Lambda_Function.py lambda_package/
+
+          cd lambda_package
+
+          # Create zip file (minimal, only dependencies + code)
           zip -r ../lambda.zip .
 
           cd ..
 
-          # Debug: only count files instead of printing all
-          echo "Lambda package created with total files:"
-          unzip -l lambda.zip | wc -l
+          # Optional: count files instead of printing all
+          echo "✅ Lambda package created with $(unzip -l lambda.zip | wc -l) files"
 
           # Deploy to Lambda
           aws lambda update-function-code \
