@@ -1,23 +1,46 @@
 import boto3
 import json
+import uuid
 
 polly_client = boto3.client('polly')
 s3_client = boto3.client('s3')
 
 BUCKET_NAME = 'khliad-audio-converter1010'
+MAX_TEXT_LENGTH = 3000
+
+
+def _make_response(status_code, body_dict):
+    return {
+        'statusCode': status_code,
+        'body': json.dumps(body_dict)
+    }
+
 
 def lambda_handler(event, context):
     print("Received Event:", json.dumps(event))  # Debugging Log
 
     # Parse event body if using API Gateway
-    event_body = json.loads(event['body']) if 'body' in event else event
+    try:
+        if 'body' in event:
+            raw_body = event.get('body') or "{}"
+            event_body = json.loads(raw_body)
+        else:
+            event_body = event or {}
+    except (TypeError, json.JSONDecodeError) as e:
+        print("Error parsing event body:", str(e))
+        return _make_response(400, {'error': 'Invalid JSON body'})
+
     text = event_body.get('text', 'Hello, welcome to AWS Polly!')
 
-    if not text:
-        return {
-            'statusCode': 400,
-            'body': json.dumps({'error': 'Missing "text" parameter'})
-        }
+    if not text or not str(text).strip():
+        return _make_response(400, {'error': 'Missing "text" parameter'})
+
+    text = str(text)
+    if len(text) > MAX_TEXT_LENGTH:
+        return _make_response(
+            400,
+            {'error': f'Text is too long. Maximum length is {MAX_TEXT_LENGTH} characters.'}
+        )
 
     # Generate speech with Polly
     response = polly_client.synthesize_speech(
@@ -27,13 +50,11 @@ def lambda_handler(event, context):
     )
 
     if 'AudioStream' not in response:
-        return {
-            'statusCode': 500,
-            'body': json.dumps({'error': 'Polly did not return audio data'})
-        }
+        return _make_response(500, {'error': 'Polly did not return audio data'})
 
     audio_stream = response['AudioStream'].read()
-    file_name = f'tts-{context.aws_request_id}.mp3'
+    request_id = getattr(context, 'aws_request_id', str(uuid.uuid4()))
+    file_name = f'tts-{request_id}.mp3'
 
     # Upload to S3 with public access
     s3_client.put_object(
@@ -50,7 +71,4 @@ def lambda_handler(event, context):
 
     print("Generated Audio URL:", audio_url)  # Debugging Log
 
-    return {
-        'statusCode': 200,
-        'body': json.dumps({'audio_url': audio_url})
-    }
+    return _make_response(200, {'audio_url': audio_url})
