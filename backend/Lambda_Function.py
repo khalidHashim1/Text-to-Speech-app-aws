@@ -7,11 +7,17 @@ s3_client = boto3.client('s3')
 
 BUCKET_NAME = 'khliad-audio-converter1010'
 MAX_TEXT_LENGTH = 3000
+CORS_HEADERS = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "OPTIONS,POST"
+}
 
 
 def _make_response(status_code, body_dict):
     return {
         'statusCode': status_code,
+        'headers': CORS_HEADERS,
         'body': json.dumps(body_dict)
     }
 
