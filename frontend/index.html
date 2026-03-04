@@ -349,65 +349,54 @@
             const text = textInput.value.trim();
             errorMessage.textContent = "";
             statusMessage.textContent = "";
-
+        
             if (!text) {
                 errorMessage.textContent = "الرجاء إدخال نص أولاً.";
                 return;
             }
-
+        
             if (text.length > MAX_LENGTH) {
                 errorMessage.textContent = `النص طويل جدًا. الحد الأقصى هو ${MAX_LENGTH} حرف.`;
                 return;
             }
-
+        
             convertButton.disabled = true;
             const originalLabel = convertButton.innerHTML;
             convertButton.innerHTML = '<span class="icon">⏳</span><span>Converting...</span>';
             statusMessage.textContent = "Sending your text securely to AWS…";
-
+        
             try {
                 const response = await fetch("https://4bpzs727p7.execute-api.us-east-1.amazonaws.com/text", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ text })
                 });
-
+        
                 if (!response.ok) {
                     console.error("Non-OK response from API:", response.status, response.statusText);
                     errorMessage.textContent = "حدث خطأ من الخادم أثناء إنشاء الصوت. (رمز الحالة: " + response.status + ")";
                     return;
                 }
-
-                let data;
-                try {
-                    data = await response.json();
-                } catch (parseError) {
-                    console.error("Error parsing JSON response:", parseError);
-                    errorMessage.textContent = "تعذر قراءة استجابة الخادم. حاول مرة أخرى لاحقًا.";
-                    return;
-                }
+        
+                const data = await response.json();
                 console.log("API Response:", data);
-
-                let parsedBody;
-                try {
-                    parsedBody = typeof data.body === "string" ? JSON.parse(data.body) : data.body;
-                } catch (bodyParseError) {
-                    console.error("Error parsing body field:", bodyParseError);
-                    errorMessage.textContent = "استجابة غير متوقعة من الخادم. حاول مرة أخرى لاحقًا.";
-                    return;
-                }
-                console.log("Parsed Audio URL:", parsedBody?.audio_url);
-
-                if (!parsedBody || !parsedBody.audio_url) {
-                    console.error("Error: audio_url is missing from the response", parsedBody);
+        
+                // ✅ FIX: Directly get the audio_url
+                const audioUrl = data.audio_url;
+                console.log("Audio URL:", audioUrl);
+        
+                if (!audioUrl) {
+                    console.error("Error: audio_url is missing from the response", data);
                     errorMessage.textContent = "We couldn't get an audio URL from the server. Please try again.";
                     return;
                 }
-
-                audioPlayer.src = parsedBody.audio_url;
+        
+                // Set audio source and play
+                audioPlayer.src = audioUrl;
                 audioPlayer.play().catch(() => {
                     // Autoplay may be blocked; user can press play manually
                 });
+        
                 statusMessage.textContent = "Speech generated successfully.";
             } catch (error) {
                 console.error("Fetch error:", error);
