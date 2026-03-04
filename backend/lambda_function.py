@@ -74,8 +74,7 @@ def lambda_handler(event, context):
         Bucket=BUCKET_NAME,
         Key=file_name,
         Body=audio_stream,
-        ContentType='audio/mpeg',
-        ACL='public-read'
+        ContentType='audio/mpeg'
     )
 
     # Get AWS region
