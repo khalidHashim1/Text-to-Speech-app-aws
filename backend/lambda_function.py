@@ -5,7 +5,7 @@ import uuid
 polly_client = boto3.client('polly')
 s3_client = boto3.client('s3')
 
-BUCKET_NAME = 'khliad-audio-converter1010'
+BUCKET_NAME = 'khalid-audio-converter1010'
 MAX_TEXT_LENGTH = 3000
 CORS_HEADERS = {
     "Access-Control-Allow-Origin": "*",
