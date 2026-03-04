@@ -2,7 +2,7 @@
 
 This project demonstrates a web application that converts text into audio using AWS services. It was built to **learn how to integrate multiple AWS services into a working solution**.
 
-**Live Site:** [texttospeech.khalidhashim.com](https://texttospeech.khalidhashim.com)
+**Live Site:** [texttospeech.khalidhashim.com](https://texttospeach.khalidhashim.com)
 
 **Implementation Highlights:**
 
