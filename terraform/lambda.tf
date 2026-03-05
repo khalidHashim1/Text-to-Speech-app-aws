@@ -13,3 +13,5 @@ resource "aws_lambda_function" "mylambdaFunction" {
             ignore_changes = [filename, s3_bucket, s3_key]
         }
 }
+
+
